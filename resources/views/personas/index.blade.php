@@ -101,6 +101,25 @@
                 background-color: #3e8e41;
                 color: white;
             }
+
+            .bottomPageButton {
+                background-color: #baffe5;
+                border: none;
+                color: black;
+                padding: 15px 15px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                opacity: 0.6;
+                border-radius:8px;
+                transition: 0.3s;
+            }
+
+            .bottomPageButton:hover {
+                background-color: #3affb4;
+                color:black;
+            }
         </style>
     </head>
     <body>
@@ -111,7 +130,9 @@
                 </div>
             </div>
         </div>
-
+        <a href='#pageBottom'>
+            <button class="bottomPageButton" type="button">Ir al fondo</button>
+        </a>
         <div class="grid-container">
             <form>
             @csrf
@@ -157,5 +178,6 @@
 
         <br>
         <a class="grayButton" href="http://127.0.0.1:8000/">Volver al inicio</a>
+        <a name="pageBottom">
     </body>
 </html>
