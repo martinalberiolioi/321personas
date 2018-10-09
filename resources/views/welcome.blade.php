@@ -80,7 +80,6 @@
                 <div class="links">
                     <a href="http://127.0.0.1:8000/personas">Mostrar Personas</a>
                     <a href="http://127.0.0.1:8000/personas/create">Alta de Personas</a>
-                    <a href="http://127.0.0.1:8000/habilidades/create">Asignar Habilidades</a>
                 </div>
             </div>
         </div>

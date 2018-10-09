@@ -19,11 +19,9 @@ Route::get('/', function () {
 });
 
 /**
- * Estos dos metodos engloban index, create, store, update y delete
+ * Este metodo engloba index, create, store, update y delete
  * Es decir, el resource solo se da cuenta a cual dirigirse
  */
-Route::resource('habilidades','SkillController');
-
 Route::resource('personas','ColabController');
 
 //-----barra separadora-----//
