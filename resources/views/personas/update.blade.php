@@ -122,7 +122,7 @@
                     </tr>
                     <tr>
                         <td>DNI</td>
-                        <td><input type="number" name='txtDni' value={{$Persona[0]->edad}} readonly></td>
+                        <td><input type="number" name='txtDni' value={{$Persona[0]->dni}} readonly></td>
                     </tr>
                     <tr>
                         <td>Legajo</td>

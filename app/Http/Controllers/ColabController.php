@@ -116,14 +116,12 @@ class colabController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ColaboratorFormRequest $request, $id)
+    public function update(ModificarColaboratorFormRequest $request, $id)
     {
         $colaborator = Colaborator::find($id);
 
-        //ucfirst(trans('algo')) convierte la primera letra del nombre y apellido a mayuscula
-        $colaborator->nombre = ucfirst(trans(Input::get('txtNombre')));
+        $colaborator->nombre = ucfirst(trans(Input::get('txtNombre'))); //ucfirst(trans('algo')) convierte la primera letra del nombre y apellido a mayuscula
         $colaborator->apellido = ucfirst(trans(Input::get('txtApellido')));
-        //
         $colaborator->edad = Input::get('txtEdad');
         $colaborator->puesto = ucfirst(trans(Input::get('txtPuesto')));
 
@@ -133,8 +131,8 @@ class colabController extends Controller
          * Primero chequea que el campo este seleccionado. Porque el usuario podria no querer modificar la skill
          */
 
-        /*$arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)
-        if($arraySkills){
+        $arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)
+        /*if($arraySkills){
             foreach ($arraySkills as $skill) {
                 $colabs_skills = $Colaborator->ColabsSkills;
                 foreach ($Colaborator->ColabsSkills as $ $colabsSkill) {
@@ -144,23 +142,11 @@ class colabController extends Controller
             }
         }*/
 
-        $todosColabSkills = new ColabsSkills();
+        $todosColabSkills = ColabsSkills::all();
 
-        if($arraySkills !== null){
-
-            foreach($arraySkills as $unSkill){
-
-
-
-
-                $colabSkill = new ColabsSkills();
-
-                $colabSkill->skill_id = $unSkill;
-                $colabSkill->colab_id = $colaborator->id;
-
-               // $colabSkill->save();
-            }
-
+        if($arraySkills !== null)
+        {
+            $this->insertarColabsSkills($arraySkills, $colaborator->id);
         }
 
         $message = "Se modifico a la persona con exito!!";
@@ -209,7 +195,8 @@ class colabController extends Controller
              *
              * Se crea una nueva instancia por cada iteracion porque sino, en vez de insertar, intenta hacer update y rompe
              */
-            if(!($validador)){
+            if(!($validador))
+            {
 
                 $colabSkill = new ColabsSkills();
 
