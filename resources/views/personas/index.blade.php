@@ -150,7 +150,7 @@
                     <th>HABILIDADES</th>
                 </thead>
                 <tbody>
-                    @foreach($Personas as $persona)
+                    @foreach($personas as $persona)
                         <tr>
                             <td>{{$persona->id}}</td>
                             <td>{{$persona->nombre}}</td>
@@ -160,7 +160,33 @@
                             <td>{{$persona->legajo}}</td>
                             <td>{{$persona->puesto}}</td>
                             <td>{{$persona->mail}}</td>
-                            <td>{{$persona->nombreSkills}}</td>
+
+                            @php
+                                $allSkills = "";
+
+                                foreach($persona->ColabsSkills as $colabskill)
+                                {
+                                       if($allSkills === "")
+                                       {
+                                            $allSkills .= $colabskill->nombre;
+                                       }
+                                       else
+                                       {
+                                           $allSkills .= ', '.$colabskill->nombre;
+                                       }                                                                
+
+                                }
+
+                                if($allSkills === "")
+                                {
+                                    $allSkills = "sin habilidades";
+                                }
+
+                            @endphp
+                           
+                            <td>{{$allSkills}}</td>
+
+                            
                             <td>
                                 <a href='http://127.0.0.1:8000/personas/{{$persona->id}}/edit'>
                                 <button class="greenButton" type="button">Modificar</button>

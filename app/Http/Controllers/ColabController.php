@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ColaboratorFormRequest;
 use App\Http\Requests\ModificarColaboratorFormRequest;
+use App\Rules\DoesColabExist;
+use App\Rules\DoesSkillExist;
+use App\Rules\DoesColabSkillExist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use App\ColabsSkills;
@@ -18,50 +21,11 @@ class colabController extends Controller
      */
     public function index()
     {
-        /**
-         * Joinea "colaboradores" con "colabs_skills". Ahi recupera los colaboradores y, para los que tienen, el skill_id.
-         * Despues, joinea "colabs_skills" con "skills"
-         * Despues hace un select para elegir TODAS las columnas de colaboradores y SOLAMENTE los nombres de los skills        
-         */
-        $Personas = DB::table('colaborators')
-                        ->leftJoin('colabs_skills', 'colaborators.id', '=', 'colabs_skills.colab_id')
-                        ->leftjoin('skills', 'skills.id', '=', 'colabs_skills.skill_id')
-                        ->select('colaborators.id',
-                            'colaborators.nombre',
-                            'colaborators.apellido',
-                            'colaborators.edad',
-                            'colaborators.dni',
-                            'colaborators.legajo',
-                            'colaborators.puesto',
-                            'colaborators.mail',
-                            'skills.nombre AS nombreSkills')
-                        ->whereNull('deleted_at')  
-                        ->orderBy('colaborators.id','asc')
-                        ->get();
+        $personas = Colaborator::with(['ColabsSkills' => function($query){
+            $query->leftJoin('skills','colabs_skills.skill_id','=','skills.id');
+        }])->get();
 
-        /**
-         * Recorre todo el array de Personas
-         * Agarra una persona y va comparando por ID con el resto de las entradas
-         * Si encuentra un ID igual, significa que hay dos entradas de la misma persona con dos habilidades distintas
-         * Entonces, toma la habilidad del repetido y la concatena con la entrada original
-         */
-        for($i = 0; $i < count($Personas); $i++){
-            for($k = $i+1; $k < count($Personas); $k++){
-
-                if($Personas[$i]->id == $Personas[$k]->id){
-
-                    $auxiliar = $Personas[$i]->nombreSkills;
-                    $Personas[$i]->nombreSkills = $auxiliar.', '.$Personas[$k]->nombreSkills;
-                }
-            }
-        }
-
-        /**
-         *  Una vez que todas las personas tienen todas las habilidades asignadas, crea un nuevo array SIN entradas pepetidas (Si habia dos ID iguales, deja uno solo)
-         */
-        $PersonasFiltradas = $Personas->unique('id');
-
-        return view('personas/index')->with('Personas', $PersonasFiltradas);
+        return view('personas/index')->with('personas', $personas);
     }
 
     /**
@@ -100,42 +64,10 @@ class colabController extends Controller
 
         $colaborator->save();
 
-        //esta linea de codigo cuenta (count()) la cantidad de entradas en la tabla. Esta cantidad es igual al ID de la ultima entrada de la tabla, entonces recupera el ID para pasarlo a colabs_skills
-        $idColab = count(DB::table('colaborators')
-                        ->select('*')
-                        ->get());
-        //
+        $arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)
 
-        var_dump($idColab);
-        $arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)       
-
-        /**
-         * Por cada skill, crea una entrada de colab_id y skill_id en la base de datos
-         */
-        foreach($arraySkills as $unSkill){
-
-            /*
-             * Chequea si el combo colab_id y skill_id existen
-             */
-            $validador = ColabsSkills::where('colab_id','=',$idColab)
-                            ->where('skill_id','=',$unSkill)
-                            ->first();
-
-            /*
-             * Si el combo colab_id y skill_id NO existen, entonces los asigna
-             * Se crea una nueva instancia por cada iteracion porque sino, en vez de insertar, intenta hacer update y rompe
-             */
-            if(!($validador)){
-
-                $colabSkill = new ColabsSkills();
-
-                $colabSkill->skill_id = $unSkill;
-                $colabSkill->colab_id = $idColab;
-
-                $colabSkill->save();
-            }
-            
-        }
+        //CAMBIAR
+        $this->insertarColabsSkills($arraySkills,$colaborator->id);
 
         $message = "Se agrego a la persona con exito!!";
         echo "<script type='text/javascript'>alert('$message');</script>";
@@ -184,7 +116,7 @@ class colabController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ModificarColaboratorFormRequest $request, $id)
+    public function update(ColaboratorFormRequest $request, $id)
     {
         $colaborator = Colaborator::find($id);
 
@@ -200,47 +132,41 @@ class colabController extends Controller
         /*
          * Primero chequea que el campo este seleccionado. Porque el usuario podria no querer modificar la skill
          */
-        if($request->input('idSkill') !== null){
 
-            $arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)       
-            $idColab = $colaborator->id;
+        /*$arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)
+        if($arraySkills){
+            foreach ($arraySkills as $skill) {
+                $colabs_skills = $Colaborator->ColabsSkills;
+                foreach ($Colaborator->ColabsSkills as $ $colabsSkill) {
+                    toArray()
+                    inArray()
+                }
+            }
+        }*/
 
-            /*
-             * Por cada skill, crea una entrada de colab_id y skill_id en la base de datos
-             */
+        $todosColabSkills = new ColabsSkills();
+
+        if($arraySkills !== null){
+
             foreach($arraySkills as $unSkill){
 
-                /*
-                 * Chequea si el combo colab_id y skill_id existen
-                 */
-                $validador = ColabsSkills::where('colab_id','=',$idColab)
-                                ->where('skill_id','=',$unSkill)
-                                ->first();
 
-                /*
-                 * Si el combo colab_id y skill_id NO existen, entonces los asigna
-                 *
-                 * Se crea una nueva instancia por cada iteracion porque sino, en vez de insertar, intenta hacer update y rompe
-                 */
-                if(!($validador)){
 
-                    $colabSkill = new ColabsSkills();
 
-                    $colabSkill->skill_id = $unSkill;
-                    $colabSkill->colab_id = $idColab;
+                $colabSkill = new ColabsSkills();
 
-                    $colabSkill->save();
-                }
-                
+                $colabSkill->skill_id = $unSkill;
+                $colabSkill->colab_id = $colaborator->id;
 
+               // $colabSkill->save();
             }
-        
+
         }
 
         $message = "Se modifico a la persona con exito!!";
         echo "<script type='text/javascript'>alert('$message');</script>";
 
-        sleep(3);
+        //sleep(3);
 
         return view('welcome');
     }
@@ -262,5 +188,38 @@ class colabController extends Controller
         sleep(3);
 
         return view('welcome');
+    }
+
+    public function insertarColabsSkills($arraySkills, $idColaborator)
+    {  
+        /*
+         * Por cada skill, crea una entrada de colab_id y skill_id en la base de datos
+         */
+        foreach($arraySkills as $unSkill){
+
+            /*
+             * Chequea si el combo colab_id y skill_id existen
+             */
+            $validador = ColabsSkills::where('colab_id','=',$idColaborator)
+                            ->where('skill_id','=',$unSkill)
+                            ->first();
+
+            /*
+             * Si el combo colab_id y skill_id NO existen, entonces los asigna
+             *
+             * Se crea una nueva instancia por cada iteracion porque sino, en vez de insertar, intenta hacer update y rompe
+             */
+            if(!($validador)){
+
+                $colabSkill = new ColabsSkills();
+
+                $colabSkill->skill_id = $unSkill;
+                $colabSkill->colab_id = $idColaborator;
+
+                $colabSkill->save();
+            }       
+
+        }
+        
     }
 }

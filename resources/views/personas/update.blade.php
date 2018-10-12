@@ -122,11 +122,11 @@
                     </tr>
                     <tr>
                         <td>DNI</td>
-                        <td><div>{{$Persona[0]->dni}}</div></td>
+                        <td><input type="number" name='txtDni' value={{$Persona[0]->edad}} readonly></td>
                     </tr>
                     <tr>
                         <td>Legajo</td>
-                        <td><div>{{$Persona[0]->legajo}}</div></td>
+                        <td><input type="number" name='txtLegajo' value={{$Persona[0]->legajo}} readonly></td>
                     </tr>
                     <tr>
                         <td>Puesto</td>
@@ -134,7 +134,7 @@
                     </tr>
                     <tr>
                         <td>Mail</td>
-                        <td><div>{{$Persona[0]->mail}}</div></td>
+                        <td><input type="mail" name="txtMail" value={{$Persona[0]->mail}} readonly></td>
                     </tr>
                     <tr>
                         <td>Habilidad</td>
