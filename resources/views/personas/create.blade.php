@@ -142,7 +142,7 @@
                         <td>Habilidad</td>
                         <td>
                             <select name="idSkill[]" multiple="multiple">
-                                @foreach($Skills as $skill)
+                                @foreach($skills as $skill)
                                     <option value={{$skill->id}}> {{$skill->nombre}} </option>
                                 @endforeach       
                             </select>

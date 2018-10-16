@@ -35,11 +35,11 @@ class colabController extends Controller
      */
     public function create()
     {
-        $Skills = DB::table('skills')
+        $skills = DB::table('skills')
                         ->select('id','nombre')
                         ->orderBy('nombre','asc')
                         ->get();
-        return view('personas/create')->with('Skills', $Skills);
+        return view('personas/create')->with('skills', $skills);
     }
 
     /**
@@ -96,17 +96,17 @@ class colabController extends Controller
      */
     public function edit($id)
     {   
-        $Skills = DB::table('skills')
+        $skills = DB::table('skills')
                         ->select('id','nombre')
                         ->orderBy('nombre','asc')
                         ->get();
 
-        $Persona = DB::table('colaborators')
+        $persona = DB::table('colaborators')
                         ->select('id','nombre','apellido','edad','dni','legajo','puesto','mail')
                         ->where('id','=',$id)
                         ->get();
 
-        return view('personas/update')->with(['Skills'=> $Skills,'Persona' => $Persona]);
+        return view('personas/update')->with(['skills'=> $skills,'persona' => $persona]);
     }
 
     /**
@@ -152,7 +152,7 @@ class colabController extends Controller
         $message = "Se modifico a la persona con exito!!";
         echo "<script type='text/javascript'>alert('$message');</script>";
 
-        //sleep(3);
+        sleep(3);
 
         return view('welcome');
     }
@@ -181,13 +181,14 @@ class colabController extends Controller
         /*
          * Por cada skill, crea una entrada de colab_id y skill_id en la base de datos
          */
-        foreach($arraySkills as $unSkill){
+        foreach($arraySkills as $skill)
+        {
 
             /*
              * Chequea si el combo colab_id y skill_id existen
              */
             $validador = ColabsSkills::where('colab_id','=',$idColaborator)
-                            ->where('skill_id','=',$unSkill)
+                            ->where('skill_id','=',$skill)
                             ->first();
 
             /*
@@ -197,10 +198,9 @@ class colabController extends Controller
              */
             if(!($validador))
             {
-
                 $colabSkill = new ColabsSkills();
 
-                $colabSkill->skill_id = $unSkill;
+                $colabSkill->skill_id = $skill;
                 $colabSkill->colab_id = $idColaborator;
 
                 $colabSkill->save();

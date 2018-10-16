@@ -104,43 +104,43 @@
         </div>
 
         <div>
-            <form action='http://127.0.0.1:8000/personas/{{$Persona[0]->id}}' method='POST'>  
+            <form action='http://127.0.0.1:8000/personas/{{$persona[0]->id}}' method='POST'>  
                 @csrf
                 @method('PUT')
                 <table>
                     <tr>
                         <td>Nombre</td>
-                        <td><input type="text" name='txtNombre' value={{$Persona[0]->nombre}}></td>
+                        <td><input type="text" name='txtNombre' value={{$persona[0]->nombre}}></td>
                     </tr>
                     <tr>
                         <td>Apellido</td>
-                        <td><input type="text" name='txtApellido' value={{$Persona[0]->apellido}}></td>
+                        <td><input type="text" name='txtApellido' value={{$persona[0]->apellido}}></td>
                     </tr>
                     <tr>
                         <td>Edad</td>
-                        <td><input type="number" name='txtEdad' value={{$Persona[0]->edad}}></td>
+                        <td><input type="number" name='txtEdad' value={{$persona[0]->edad}}></td>
                     </tr>
                     <tr>
                         <td>DNI</td>
-                        <td><input type="number" name='txtDni' value={{$Persona[0]->dni}} readonly></td>
+                        <td><input type="number" name='txtDni' value={{$persona[0]->dni}} readonly></td>
                     </tr>
                     <tr>
                         <td>Legajo</td>
-                        <td><input type="number" name='txtLegajo' value={{$Persona[0]->legajo}} readonly></td>
+                        <td><input type="number" name='txtLegajo' value={{$persona[0]->legajo}} readonly></td>
                     </tr>
                     <tr>
                         <td>Puesto</td>
-                        <td><input type="text" name='txtPuesto' value={{$Persona[0]->puesto}}></td>
+                        <td><input type="text" name='txtPuesto' value={{$persona[0]->puesto}}></td>
                     </tr>
                     <tr>
                         <td>Mail</td>
-                        <td><input type="mail" name="txtMail" value={{$Persona[0]->mail}} readonly></td>
+                        <td><input type="mail" name="txtMail" value={{$persona[0]->mail}} readonly></td>
                     </tr>
                     <tr>
                         <td>Habilidad</td>
                         <td>
                             <select name="idSkill[]" multiple="multiple">
-                                @foreach($Skills as $skill)
+                                @foreach($skills as $skill)
                                     <option value={{$skill->id}}> {{$skill->nombre}} </option>
                                 @endforeach       
                             </select>
