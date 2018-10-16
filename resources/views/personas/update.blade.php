@@ -110,31 +110,31 @@
                 <table>
                     <tr>
                         <td>Nombre</td>
-                        <td><input type="text" name='txtNombre' value={{$persona[0]->nombre}}></td>
+                        <td><input type="text" name='nombre' value={{$persona[0]->nombre}}></td>
                     </tr>
                     <tr>
                         <td>Apellido</td>
-                        <td><input type="text" name='txtApellido' value={{$persona[0]->apellido}}></td>
+                        <td><input type="text" name='apellido' value={{$persona[0]->apellido}}></td>
                     </tr>
                     <tr>
                         <td>Edad</td>
-                        <td><input type="number" name='txtEdad' value={{$persona[0]->edad}}></td>
+                        <td><input type="number" name='edad' value={{$persona[0]->edad}}></td>
                     </tr>
                     <tr>
                         <td>DNI</td>
-                        <td><input type="number" name='txtDni' value={{$persona[0]->dni}} readonly></td>
+                        <td><input type="number" name='dni' value={{$persona[0]->dni}} readonly></td>
                     </tr>
                     <tr>
                         <td>Legajo</td>
-                        <td><input type="number" name='txtLegajo' value={{$persona[0]->legajo}} readonly></td>
+                        <td><input type="number" name='legajo' value={{$persona[0]->legajo}} readonly></td>
                     </tr>
                     <tr>
                         <td>Puesto</td>
-                        <td><input type="text" name='txtPuesto' value={{$persona[0]->puesto}}></td>
+                        <td><input type="text" name='puesto' value={{$persona[0]->puesto}}></td>
                     </tr>
                     <tr>
                         <td>Mail</td>
-                        <td><input type="mail" name="txtMail" value={{$persona[0]->mail}} readonly></td>
+                        <td><input type="mail" name="mail" value={{$persona[0]->mail}} readonly></td>
                     </tr>
                     <tr>
                         <td>Habilidad</td>

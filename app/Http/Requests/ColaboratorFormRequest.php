@@ -24,13 +24,13 @@ class ColaboratorFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'txtNombre' => 'required',
-            'txtApellido' => 'required',
-            'txtEdad' => 'required|integer|between:15,110',
-            'txtDni' => 'required|integer|unique:colaborators,dni',
-            'txtLegajo' => 'required|integer|unique:colaborators,legajo',
-            'txtPuesto' => 'required',
-            'txtMail' => 'required|unique:colaborators,mail|email',
+            'nombre' => 'required',
+            'apellido' => 'required',
+            'edad' => 'required|integer|between:15,110',
+            'dni' => 'required|integer|unique:colaborators,dni',
+            'legajo' => 'required|integer|unique:colaborators,legajo',
+            'puesto' => 'required',
+            'mail' => 'required|unique:colaborators,mail|email',
             'idSkill' => 'required|exists:skills,id'
         ];
     }

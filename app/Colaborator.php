@@ -70,13 +70,11 @@ class Colaborator extends Model
     {
     	$colaborator = Colaborator::find($id);
 
-        $colaborator->nombre = $nombre; //ucfirst(trans('algo')) convierte la primera letra del nombre y apellido a mayuscula
+        $colaborator->nombre = $nombre;
         $colaborator->apellido = $apellido;
         $colaborator->edad = $edad;
         $colaborator->puesto = $puesto;
 
         $colaborator->save();
-
-        return $colaborator->id;
     }
 }

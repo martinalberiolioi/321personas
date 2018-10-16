@@ -83,5 +83,10 @@
                 </div>
             </div>
         </div>
+
+        @if(!empty($message))
+            <script type='text/javascript'>alert('{{$message}}');</script>
+        @endif
+        
     </body>
 </html>
