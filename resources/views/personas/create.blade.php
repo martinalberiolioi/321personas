@@ -112,31 +112,31 @@
                 <table>
                     <tr>
                         <td>Nombre</td>
-                        <td><input type="text" name='txtNombre'></td>
+                        <td><input type="text" name='nombre'></td>
                     </tr>
                     <tr>
                         <td>Apellido</td>
-                        <td><input type="text" name='txtApellido'></td>
+                        <td><input type="text" name='apellido'></td>
                     </tr>
                     <tr>
                         <td>Edad</td>
-                        <td><input type="number" name='txtEdad'></td>
+                        <td><input type="number" name='edad'></td>
                     </tr>
                     <tr>
                         <td>DNI</td>
-                        <td><input type="number" name='txtDni'></td>
+                        <td><input type="number" name='dni'></td>
                     </tr>
                     <tr>
                         <td>Legajo</td>
-                        <td><input type="number" name='txtLegajo'></td>
+                        <td><input type="number" name='legajo'></td>
                     </tr>
                     <tr>
                         <td>Puesto</td>
-                        <td><input type="text" name='txtPuesto'></td>
+                        <td><input type="text" name='puesto'></td>
                     </tr>
                     <tr>
                         <td>Mail</td>
-                        <td><input type="text" name='txtMail'></td>
+                        <td><input type="text" name='mail'></td>
                     </tr>
                     <tr>
                         <td>Habilidad</td>

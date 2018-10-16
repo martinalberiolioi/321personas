@@ -24,10 +24,10 @@ class ModificarColaboratorFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'txtNombre' => 'required',
-            'txtApellido' => 'required',
-            'txtEdad' => 'required|integer|between:15,110',
-            'txtPuesto' => 'required',
+            'nombre' => 'required',
+            'apellido' => 'required',
+            'edad' => 'required|integer|between:15,110',
+            'puesto' => 'required',
             'idSkill' => 'exists:skills,id'
         ];
     }
