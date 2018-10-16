@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ColaboratorFormRequest;
 use App\Http\Requests\ModificarColaboratorFormRequest;
-use App\Rules\DoesColabExist;
-use App\Rules\DoesSkillExist;
-use App\Rules\DoesColabSkillExist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use App\ColabsSkills;
@@ -50,24 +47,20 @@ class colabController extends Controller
      */
     public function store(ColaboratorFormRequest $request)
     {        
-        $colaborator = new Colaborator();
 
-        //ucfirst(trans('algo')) convierte la primera letra del nombre y apellido a mayuscula
-        $colaborator->nombre = ucfirst(trans(Input::get('txtNombre')));
-        $colaborator->apellido = ucfirst(trans(Input::get('txtApellido')));
-        //
-        $colaborator->edad = Input::get('txtEdad');
-        $colaborator->dni = Input::get('txtDni');
-        $colaborator->legajo = Input::get('txtLegajo');
-        $colaborator->puesto = ucfirst(trans(Input::get('txtPuesto')));
-        $colaborator->mail = Input::get('txtMail');
-
-        $colaborator->save();
+        $idColaborator = Colaborator::agregarUsuario(
+            ucfirst(trans(Input::get('txtNombre'))), 
+            ucfirst(trans(Input::get('txtApellido'))), 
+            Input::get('txtEdad'), 
+            Input::get('txtDni'), 
+            Input::get('txtLegajo'), 
+            ucfirst(trans(Input::get('txtPuesto'))), 
+            Input::get('txtMail')
+        );
 
         $arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)
 
-        //CAMBIAR
-        $this->insertarColabsSkills($arraySkills,$colaborator->id);
+        Colaborator::agregarSkills($arraySkills, $idColaborator);
 
         $message = "Se agrego a la persona con exito!!";
         echo "<script type='text/javascript'>alert('$message');</script>";
@@ -118,35 +111,21 @@ class colabController extends Controller
      */
     public function update(ModificarColaboratorFormRequest $request, $id)
     {
-        $colaborator = Colaborator::find($id);
 
-        $colaborator->nombre = ucfirst(trans(Input::get('txtNombre'))); //ucfirst(trans('algo')) convierte la primera letra del nombre y apellido a mayuscula
-        $colaborator->apellido = ucfirst(trans(Input::get('txtApellido')));
-        $colaborator->edad = Input::get('txtEdad');
-        $colaborator->puesto = ucfirst(trans(Input::get('txtPuesto')));
-
-        $colaborator->save();
-
-        /*
-         * Primero chequea que el campo este seleccionado. Porque el usuario podria no querer modificar la skill
-         */
+        $idColaborator = Colaborator::modificarUsuario(
+            $id,
+            ucfirst(trans(Input::get('txtNombre'))),
+            ucfirst(trans(Input::get('txtApellido'))),
+            Input::get('txtEdad'),
+            ucfirst(trans(Input::get('txtPuesto')))
+        );
 
         $arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)
-        /*if($arraySkills){
-            foreach ($arraySkills as $skill) {
-                $colabs_skills = $Colaborator->ColabsSkills;
-                foreach ($Colaborator->ColabsSkills as $ $colabsSkill) {
-                    toArray()
-                    inArray()
-                }
-            }
-        }*/
 
-        $todosColabSkills = ColabsSkills::all();
 
-        if($arraySkills !== null)
+        if($arraySkills)
         {
-            $this->insertarColabsSkills($arraySkills, $colaborator->id);
+            Colaborator::agregarSkills($arraySkills, $idColaborator);
         }
 
         $message = "Se modifico a la persona con exito!!";
@@ -176,37 +155,4 @@ class colabController extends Controller
         return view('welcome');
     }
 
-    public function insertarColabsSkills($arraySkills, $idColaborator)
-    {  
-        /*
-         * Por cada skill, crea una entrada de colab_id y skill_id en la base de datos
-         */
-        foreach($arraySkills as $skill)
-        {
-
-            /*
-             * Chequea si el combo colab_id y skill_id existen
-             */
-            $validador = ColabsSkills::where('colab_id','=',$idColaborator)
-                            ->where('skill_id','=',$skill)
-                            ->first();
-
-            /*
-             * Si el combo colab_id y skill_id NO existen, entonces los asigna
-             *
-             * Se crea una nueva instancia por cada iteracion porque sino, en vez de insertar, intenta hacer update y rompe
-             */
-            if(!($validador))
-            {
-                $colabSkill = new ColabsSkills();
-
-                $colabSkill->skill_id = $skill;
-                $colabSkill->colab_id = $idColaborator;
-
-                $colabSkill->save();
-            }       
-
-        }
-        
-    }
 }
