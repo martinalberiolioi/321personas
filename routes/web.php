@@ -24,8 +24,6 @@ Route::get('/', function () {
  */
 Route::resource('personas','ColabController');
 
-//-----barra separadora-----//
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

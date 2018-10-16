@@ -18,7 +18,8 @@ class colabController extends Controller
      */
     public function index()
     {
-        $personas = Colaborator::with(['ColabsSkills' => function($query){
+        $personas = Colaborator::with(['ColabsSkills' => function($query)
+        {
             $query->leftJoin('skills','colabs_skills.skill_id','=','skills.id');
         }])->get();
 
@@ -36,6 +37,7 @@ class colabController extends Controller
                         ->select('id','nombre')
                         ->orderBy('nombre','asc')
                         ->get();
+                        
         return view('personas/create')->with('skills', $skills);
     }
 
