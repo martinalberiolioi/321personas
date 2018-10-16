@@ -7,6 +7,7 @@ use App\Http\Requests\ModificarColaboratorFormRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use App\ColabsSkills;
+use App\Skill;
 use App\Colaborator;
 
 class colabController extends Controller
@@ -21,6 +22,7 @@ class colabController extends Controller
         $personas = Colaborator::with(['ColabsSkills' => function($query)
         {
             $query->leftJoin('skills','colabs_skills.skill_id','=','skills.id');
+
         }])->get();
 
         return view('personas/index')->with('personas', $personas);
@@ -33,10 +35,7 @@ class colabController extends Controller
      */
     public function create()
     {
-        $skills = DB::table('skills')
-                        ->select('id','nombre')
-                        ->orderBy('nombre','asc')
-                        ->get();
+        $skills = Skill::orderBy('nombre','asc')->get();
                         
         return view('personas/create')->with('skills', $skills);
     }
@@ -60,13 +59,11 @@ class colabController extends Controller
             Input::get('mail')
         );
 
-        //Colaborator::create($request->all()); fue borrado porque tambien recupera el idSkill y no puede meter eso en colaborators
+        //Colaborator::create($request->all()); //fue borrado porque tambien recupera el idSkill y no puede meter eso en colaborators
 
         $arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)
 
         Colaborator::agregarSkills($arraySkills, $idColaborator);
-
-        sleep(3);
 
         return view('welcome')->with('message','Se agrego a la persona con exito!!'); 
     }
@@ -90,15 +87,9 @@ class colabController extends Controller
      */
     public function edit($id)
     {   
-        $skills = DB::table('skills')
-                        ->select('id','nombre')
-                        ->orderBy('nombre','asc')
-                        ->get();
+        $skills = Skill::orderBy('nombre','asc')->get();
 
-        $persona = DB::table('colaborators')
-                        ->select('id','nombre','apellido','edad','dni','legajo','puesto','mail')
-                        ->where('id','=',$id)
-                        ->get();
+        $persona = Colaborator::where('id','=',$id)->get();
 
         return view('personas/update')->with(['skills'=> $skills,'persona' => $persona]);
     }
@@ -128,8 +119,6 @@ class colabController extends Controller
             Colaborator::agregarSkills($arraySkills, $id);
         }
 
-        sleep(3);
-
         return view('welcome')->with('message', 'Se modifico a la persona con exito!!');
     }
 
@@ -143,8 +132,6 @@ class colabController extends Controller
     {
         $colaborator = Colaborator::find($id);
         $colaborator->delete();
-
-        sleep(3);
 
         return view('welcome')->with('message', 'Se elimino a la persona con exito!!');
     }

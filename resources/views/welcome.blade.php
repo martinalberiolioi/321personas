@@ -85,6 +85,10 @@
         </div>
 
         @if(!empty($message))
+            @php
+                sleep(3);
+            @endphp
+            
             <script type='text/javascript'>alert('{{$message}}');</script>
         @endif
         

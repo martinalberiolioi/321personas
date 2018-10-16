@@ -20,35 +20,6 @@ class Colaborator extends Model
         return $this->hasMany('App\ColabsSkills', 'colab_id');
     }
 
-    public static function agregarSkills($arraySkills, $idColaborator)
-    {
-    	foreach($arraySkills as $skill)
-        {
-            /*
-             * Chequea si el combo colab_id y skill_id existen
-             */
-            $validador = ColabsSkills::where('colab_id','=',$idColaborator)
-                            ->where('skill_id','=',$skill)
-                            ->first();
-
-            /*
-             * Si el combo colab_id y skill_id NO existen, entonces los asigna
-             *
-             * Se crea una nueva instancia por cada iteracion porque sino, en vez de insertar, intenta hacer update y rompe
-             */
-            if(!($validador))
-            {
-                $colabSkill = new ColabsSkills();
-
-                $colabSkill->skill_id = $skill;
-                $colabSkill->colab_id = $idColaborator;
-
-                $colabSkill->save();
-            }       
-
-        }
-    }
-
     public static function agregarUsuario($nombre, $apellido, $edad, $dni, $legajo, $puesto, $mail)
     {
     	$colaborator = new Colaborator();
@@ -76,5 +47,34 @@ class Colaborator extends Model
         $colaborator->puesto = $puesto;
 
         $colaborator->save();
+    }
+
+    public static function agregarSkills($arraySkills, $idColaborator)
+    {
+    	foreach($arraySkills as $skill)
+        {
+            /*
+             * Chequea si el combo colab_id y skill_id existen
+             */
+            $validador = ColabsSkills::where('colab_id','=',$idColaborator)
+                            ->where('skill_id','=',$skill)
+                            ->first();
+
+            /*
+             * Si el combo colab_id y skill_id NO existen, entonces los asigna
+             *
+             * Se crea una nueva instancia por cada iteracion porque sino, en vez de insertar, intenta hacer update y rompe
+             */
+            if(!($validador))
+            {
+                $colabSkill = new ColabsSkills();
+
+                $colabSkill->skill_id = $skill;
+                $colabSkill->colab_id = $idColaborator;
+
+                $colabSkill->save();
+            }       
+
+        }
     }
 }
