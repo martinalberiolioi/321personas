@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ColaboratorFormRequest;
 use App\Http\Requests\ModificarColaboratorFormRequest;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use App\ColabsSkills;
 use App\Skill;
@@ -49,23 +48,13 @@ class colabController extends Controller
     public function store(ColaboratorFormRequest $request)
     {        
 
-        $idColaborator = Colaborator::agregarUsuario(
-            ucfirst(trans(Input::get('nombre'))), 
-            ucfirst(trans(Input::get('apellido'))), 
-            Input::get('edad'), 
-            Input::get('dni'), 
-            Input::get('legajo'), 
-            ucfirst(trans(Input::get('puesto'))), 
-            Input::get('mail')
-        );
+        $colaborador = Colaborator::create(Input::all());
+        $Colaborator->ColabSkills()->associate(Input::get('idSkill'));
+        //$arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)
 
-        //Colaborator::create($request->all()); //fue borrado porque tambien recupera el idSkill y no puede meter eso en colaborators
+        //Colaborator::agregarSkills($arraySkills, $colaborator->id);
 
-        $arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)
-
-        Colaborator::agregarSkills($arraySkills, $idColaborator);
-
-        return view('welcome')->with('message','Se agrego a la persona con exito!!'); 
+        return view('welcome')->with('mensaje','Se agrego a la persona con exito!!'); 
     }
 
     /**
@@ -103,15 +92,9 @@ class colabController extends Controller
      */
     public function update(ModificarColaboratorFormRequest $request, $id)
     {
-
-        Colaborator::modificarUsuario(
-            $id,
-            ucfirst(trans(Input::get('nombre'))),
-            ucfirst(trans(Input::get('apellido'))),
-            Input::get('edad'),
-            ucfirst(trans(Input::get('puesto')))
-        );
-
+        $colaborador = Colaborator::findOrFail($id);
+        $colaborador->update(Input::all());
+        
         $arraySkills = $request->input('idSkill'); //recupera el array de skills (si es 1 o mas)
 
         if($arraySkills)
@@ -119,7 +102,7 @@ class colabController extends Controller
             Colaborator::agregarSkills($arraySkills, $id);
         }
 
-        return view('welcome')->with('message', 'Se modifico a la persona con exito!!');
+        return view('welcome')->with('mensaje', 'Se modifico a la persona con exito!!');
     }
 
     /**
@@ -133,7 +116,7 @@ class colabController extends Controller
         $colaborator = Colaborator::find($id);
         $colaborator->delete();
 
-        return view('welcome')->with('message', 'Se elimino a la persona con exito!!');
+        return view('welcome')->with('mensaje', 'Se elimino a la persona con exito!!');
     }
 
 }

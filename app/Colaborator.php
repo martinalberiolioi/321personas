@@ -12,6 +12,15 @@ class Colaborator extends Model
     protected $table = 'colaborators';
     protected $guarded = ['id'];
     protected $dates = ['deleted_at'];
+
+    protected $fillable = ['nombre',
+                            'apellido',
+                            'edad',
+                            'dni',
+                            'legajo',
+                            'puesto',
+                            'mail',
+                        ];
     
     protected $softDelete = true;
 

@@ -11,91 +11,8 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
 
         <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+        <link rel="stylesheet" type="text/css" href="/css/create.css">
 
-            .flex-center {
-                align-items: top;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            form{
-                display:grid;
-                grid-template-columns: 2;
-                grid-template-rows: 7;
-                color: black;
-                text-align:center;
-                margin:5% 40%;
-            }
-
-            select{
-                width:183px;
-            }
-
-            .grayButton {
-                background-color: gray; 
-                border: none;
-                color: black;
-                font-weight: bold;
-                padding: 15px 32px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                transition: 0.3s;
-            }
-
-            .grayButton:hover {
-                background-color: #3e8e41;
-                color: white;
-            }
-
-            .blueButton {
-                background-color: #008CBA;
-                border: none;
-                color: white;
-                padding: 15px 32px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                opacity: 0.6;
-                transition: 0.3s;
-            }
-
-            .blueButton:hover {opacity: 1}
-
-            .alert {
-                font-weight:bold;
-            }
-
-        </style>
     </head>
     <body>
         <div class="flex-center position-ref">
@@ -150,7 +67,7 @@
                     </tr>
                 </table>
 
-                <button class="blueButton" type="submit" name="btnEnviar">Enviar</button>
+                <button class="blueButton" type="submit">Enviar</button>
             </form>
             @if ($errors->any())
                 <div class="alert alert-danger">
