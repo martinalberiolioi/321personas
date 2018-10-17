@@ -8,9 +8,9 @@ class Skill extends Model
 {
     protected $table = 'skills';
     protected $guarded = ['id'];
-
-    public function colabsSkills()
+    
+    public function colaborator()
     {
-        return $this->hasMany('App\ColabsSkills', 'skill_id');
+    	return $this->belongsToMany('App\Colaborator', 'colabs_skills', 'skill_id')->withTimestamps();
     }
 }

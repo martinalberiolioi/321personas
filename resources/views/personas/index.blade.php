@@ -55,15 +55,15 @@
                             @php
                                 $allSkills = "";
 
-                                foreach($persona->ColabsSkills as $colabskill)
+                                foreach($persona->skill as $skill)
                                 {
                                        if($allSkills === "")
                                        {
-                                            $allSkills .= $colabskill->nombre;
+                                            $allSkills .= $skill->nombre;
                                        }
                                        else
                                        {
-                                           $allSkills .= ', '.$colabskill->nombre;
+                                           $allSkills .= ', '.$skill->nombre;
                                        }                                                                
 
                                 }
