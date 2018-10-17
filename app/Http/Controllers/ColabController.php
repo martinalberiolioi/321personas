@@ -97,12 +97,12 @@ class colabController extends Controller
         {
             foreach($skills as $skill)
             {
-                $validador = $colaborator->skill()
-                                        ->where('skill_id','=',$skill->id)
-                                        ->where('colab_id','=',$colaborator->id) 
-                                        ->first();
+                $existeFila = $colaborator->skill()
+                                         ->where('skill_id','=',$skill->id)
+                                         ->where('colab_id','=',$colaborator->id) 
+                                         ->first();
 
-                if(!($validador))
+                if(!($existeFila))
                 {
                     $colaborator->skill()->attach($skill->id);
                 }
