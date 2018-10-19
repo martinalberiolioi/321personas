@@ -17,9 +17,7 @@ class colabController extends Controller
      */
     public function index()
     {
-        $personas = Colaborator::with('skill')->get();
-
-        return view('personas/index')->with('personas', $personas);
+        return view('personas/index');
     }
 
     /**
@@ -28,10 +26,8 @@ class colabController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        $skills = Skill::orderBy('nombre','asc')->get();
-                        
-        return view('personas/create')->with('skills', $skills);
+    {                       
+        return view('personas/create');
     }
 
     /**
@@ -42,7 +38,6 @@ class colabController extends Controller
      */
     public function store(ColaboratorFormRequest $request)
     {        
-
         $colaborator = Colaborator::create(Input::all());
         $skills = Skill::find(Input::get('idSkill'));
 
@@ -98,9 +93,9 @@ class colabController extends Controller
             foreach($skills as $skill)
             {
                 $existeFila = $colaborator->skill()
-                                         ->where('skill_id','=',$skill->id)
-                                         ->where('colab_id','=',$colaborator->id) 
-                                         ->first();
+                                          ->where('skill_id','=',$skill->id)
+                                          ->where('colab_id','=',$colaborator->id) 
+                                          ->first();
 
                 if(!($existeFila))
                 {

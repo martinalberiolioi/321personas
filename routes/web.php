@@ -14,9 +14,7 @@ use Illuminate\Support\Facades\Input;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome');
 
 /**
  * Este metodo engloba index, create, store, update y delete
@@ -24,6 +22,6 @@ Route::get('/', function () {
  */
 Route::resource('personas','ColabController');
 
-Auth::routes();
+// Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');

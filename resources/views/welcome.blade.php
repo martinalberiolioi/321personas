@@ -36,6 +36,5 @@
             
             <script type='text/javascript'>alert('{{$mensaje}}');</script>
         @endif
-        
     </body>
 </html>
