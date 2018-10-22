@@ -1,8 +1,4 @@
 <?php
-
-use App\Colaborator;
-use App\Skill;
-use Illuminate\Support\Facades\Input;
 /*
 |--------------------------------------------------------------------------
 | Web Routes

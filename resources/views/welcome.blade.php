@@ -12,7 +12,6 @@
 
         <!-- Styles -->
         <link rel="stylesheet" type="text/css" href="/css/welcome.css">
-
     </head>
     <body>
         <div class="flex-center position-ref full-height">
