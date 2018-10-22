@@ -6,17 +6,20 @@ use App\Http\Requests\ColaboratorFormRequest;
 use App\Http\Requests\ModificarColaboratorFormRequest;
 use Illuminate\Support\Facades\Input;
 use App\Repositories\ColaboratorRepository;
+use App\Repositories\SkillRepository;
 use App\Skill;
 use App\Colaborator;
 
 class colabController extends Controller
 {
 
-    protected $repository;
+    protected $colabRepository;
+    protected $skillRepository;
 
-    public function __construct(ColaboratorRepository $repository)
+    public function __construct(ColaboratorRepository $colabRepository, skillRepository $skillRepository)
     {
-        $this->repository = $repository;
+        $this->colabRepository = $colabRepository;
+        $this->skillRepository = $skillRepository;
     }
 
     /**
@@ -47,8 +50,8 @@ class colabController extends Controller
      */
     public function store(ColaboratorFormRequest $request)
     {        
-        $skills = Skill::find(Input::get('idSkill'));
-        $colaborator = $this->repository->create(Input::all());
+        $skills = $this->skillRepository->find(Input::get('idSkill'));
+        $colaborator = $this->colabRepository->create(Input::all());
 
         foreach($skills as $skill)
         {
@@ -77,8 +80,11 @@ class colabController extends Controller
      */
     public function edit($id)
     {   
-        $skills = Skill::orderBy('nombre','asc')->get();
-        $persona = $this->repository->find($id);
+        $skills = $this->skillRepository->scopeQuery(function($query){
+            return $query->orderBy('nombre','asc');
+        })->get();
+
+        $persona = $this->colabRepository->find($id);
 
         return view('personas/update')->with(['skills'=> $skills,'persona' => $persona]);
     }
@@ -92,23 +98,12 @@ class colabController extends Controller
      */
     public function update(ModificarColaboratorFormRequest $request, $id)
     {
-        $colaborator = $this->repository->update(Input::all(), $id);
-        $skills = Skill::find(Input::get('idSkill'));       
+        $colaborator = $this->colabRepository->update(Input::all(), $id);
+        $skills = $this->skillRepository->find(Input::get('idSkill'));     
 
         if($skills !== null)
         {
-            foreach($skills as $skill)
-            {
-                $existeFila = $colaborator->skill()
-                                          ->where('skill_id','=',$skill->id)
-                                          ->where('colab_id','=',$colaborator->id) 
-                                          ->first();
-
-                if(!($existeFila))
-                {
-                    $colaborator->skill()->attach($skill->id);
-                }
-            }   
+            $this->colabRepository->ExisteColabSkill($skills, $colaborator); 
         }
 
         return view('welcome')->with('mensaje', 'Se modifico a la persona con exito!!');
@@ -122,7 +117,7 @@ class colabController extends Controller
      */
     public function destroy($id)
     {
-        $this->repository->delete($id);
+        $this->colabRepository->delete($id);
 
         return view('welcome')->with('mensaje', 'Se elimino a la persona con exito!!');
     }
