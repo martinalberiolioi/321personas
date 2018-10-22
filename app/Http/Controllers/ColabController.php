@@ -5,11 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ColaboratorFormRequest;
 use App\Http\Requests\ModificarColaboratorFormRequest;
 use Illuminate\Support\Facades\Input;
+use App\Repositories\ColaboratorRepository;
 use App\Skill;
 use App\Colaborator;
 
 class colabController extends Controller
 {
+
+    protected $repository;
+
+    public function __construct(ColaboratorRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -38,8 +47,8 @@ class colabController extends Controller
      */
     public function store(ColaboratorFormRequest $request)
     {        
-        $colaborator = Colaborator::create(Input::all());
         $skills = Skill::find(Input::get('idSkill'));
+        $colaborator = $this->repository->create(Input::all());
 
         foreach($skills as $skill)
         {
@@ -69,7 +78,7 @@ class colabController extends Controller
     public function edit($id)
     {   
         $skills = Skill::orderBy('nombre','asc')->get();
-        $persona = Colaborator::where('id','=',$id)->get();
+        $persona = $this->repository->find($id);
 
         return view('personas/update')->with(['skills'=> $skills,'persona' => $persona]);
     }
@@ -83,9 +92,7 @@ class colabController extends Controller
      */
     public function update(ModificarColaboratorFormRequest $request, $id)
     {
-        $colaborator = Colaborator::findOrFail($id);
-        $colaborator->update(Input::all());
-
+        $colaborator = $this->repository->update(Input::all(), $id);
         $skills = Skill::find(Input::get('idSkill'));       
 
         if($skills !== null)
@@ -115,8 +122,7 @@ class colabController extends Controller
      */
     public function destroy($id)
     {
-        $colaborator = Colaborator::find($id);
-        $colaborator->delete();
+        $this->repository->delete($id);
 
         return view('welcome')->with('mensaje', 'Se elimino a la persona con exito!!');
     }
